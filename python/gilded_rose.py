@@ -13,17 +13,29 @@ class GildedRose(object):
             if item.name == self.SULFURAS:
                 continue
 
-            if item.name != self.AGED_BRIE and item.name != self.BACKSTAGE:
-                if item.quality > 0:
-                    self._decrease_quality(item)
-            else:
-                if item.quality < 50:
-                    self._increase_quality(item)
-                    if item.name == self.BACKSTAGE:
-                        self._update_backstage_pass(item)
-            item.sell_in = item.sell_in - 1
+            self._update_item(item)
+
+            item.sell_in -= 1
             if item.sell_in < 0:
                 self._handle_expired_item(item)
+
+    def _update_item(self, item):
+        if item.name == self.AGED_BRIE:
+            self._update_aged_brie(item)
+        elif item.name == self.BACKSTAGE:
+            self._update_backstage(item)
+        else:
+            self._update_normal_item(item)
+
+    def _update_aged_brie(self, item):
+        self._increase_quality(item)
+
+    def _update_backstage(self, item):
+        self._increase_quality(item)
+        self._update_backstage_pass(item)
+
+    def _update_normal_item(self, item):
+        self._decrease_quality(item)
 
     def _increase_quality(self, item, amount=1):
         item.quality = min(50, item.quality + amount)
@@ -32,19 +44,19 @@ class GildedRose(object):
         item.quality = max(0, item.quality - amount)
 
     def _update_backstage_pass(self, item):
-        if item.sell_in < 11 and item.quality < 50:
+        if item.sell_in < 11:
             self._increase_quality(item)
-        if item.sell_in < 6 and item.quality < 50:
+        if item.sell_in < 6:
             self._increase_quality(item)
 
     def _handle_expired_item(self, item):
-        if item.name == self.AGED_BRIE and item.quality < 50:
+        if item.name == self.AGED_BRIE:
             self._increase_quality(item)
         elif item.name == self.BACKSTAGE:
             item.quality = 0
         else:
-            if item.quality > 0:
-                self._decrease_quality(item)
+            self._decrease_quality(item)
+
 
 class Item:
     def __init__(self, name, sell_in, quality):
