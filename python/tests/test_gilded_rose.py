@@ -137,3 +137,29 @@ def test_backstage_pass_quality_never_exceeds_fifty():
 
     assert items[0].quality == 50
 
+def test_conjured_item_degrades_twice_as_fast_before_expiry():
+    items = [Item(name="Conjured Mana Cake", sell_in=5, quality=10)]
+    gilded_rose = GildedRose(items)
+
+    gilded_rose.update_quality()
+
+    assert items[0].sell_in == 4
+    assert items[0].quality == 8
+
+def test_conjured_item_degrades_four_times_as_fast_after_expiry():
+    items = [Item(name="Conjured Mana Cake", sell_in=0, quality=10)]
+    gilded_rose = GildedRose(items)
+
+    gilded_rose.update_quality()
+
+    assert items[0].sell_in == -1
+    assert items[0].quality == 6
+
+def test_conjured_item_quality_never_goes_below_zero():
+    items = [Item(name="Conjured Mana Cake", sell_in=0, quality=3)]
+    gilded_rose = GildedRose(items)
+
+    gilded_rose.update_quality()
+
+    assert items[0].quality == 0
+
