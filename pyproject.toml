@@ -15,7 +15,8 @@ test = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["python/tests"]
+pythonpath = ["python"]
 addopts = "-ra"
 
 [tool.coverage.run]

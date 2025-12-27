@@ -1,7 +1,6 @@
 import pytest
 
-from python.gilded_rose import GildedRose, Item
-
+from gilded_rose import GildedRose, Item
 
 def test_normal_item_degrades_by_one_each_day():
     items = [Item(name="+5 Dexterity Vest", sell_in=10, quality=20)]
